@@ -1,0 +1,1 @@
+NOT matsui OR (atsushi OR (aaa AND bbb) AND ccc) 
