@@ -1,0 +1,1 @@
+NOT 山田 OR 太郎 OR 大木 AND 隆 哲郎

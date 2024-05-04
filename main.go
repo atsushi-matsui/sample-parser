@@ -13,15 +13,18 @@ import (
 
 func main() {
 	input, _ := antlr.NewFileStream(os.Args[1])
-	lexer := parsing.NewSearchQueryLexer(input)
+	//lexer := parsing.NewSearchQueryLexer(input)
+	lexer := parsing.NewDefaultOrSearchQueryLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
 
-	p := parsing.NewSearchQueryParser(stream)
+	//p := parsing.NewSearchQueryParser(stream)
+	p := parsing.NewDefaultOrSearchQueryParser(stream)
 	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
-	lintener := parser.NewTreeShapeListener()
-	antlr.ParseTreeWalkerDefault.Walk(lintener, p.Expr())
+	//listener := parser.NewTreeShapeListener()
+	listener := parser.NewDefaultOrListener()
+	antlr.ParseTreeWalkerDefault.Walk(listener, p.AndExpression())
 
-	res := lintener.PopQuery()
+	res := listener.PopQuery()
 	resJSON, _ := json.Marshal(res)
 	fmt.Printf("res: %s\n", resJSON)
 
