@@ -8,6 +8,8 @@ andExpression
 orExpression
    :notExpression 
    |orExpression WHITE_SPACE (OR WHITE_SPACE)? notExpression
+   |KEYWORD_CHARACTER+ PHRASE
+   |PHRASE KEYWORD_CHARACTER+
    ;
 
 notExpression
@@ -17,11 +19,12 @@ notExpression
 
 phrase
    :keyword
-   |DOUBLE_QUOTE .*? DOUBLE_QUOTE
+   |PHRASE
    ;
 
 keyword
    :KEYWORD_CHARACTER+
+   |DOUBLE_QUOTE+
    ;
 
 AND
@@ -44,6 +47,10 @@ KEYWORD_CHARACTER
 
 DOUBLE_QUOTE
    :'"'
+   ;
+
+PHRASE
+   :DOUBLE_QUOTE .*? DOUBLE_QUOTE
    ;
 
 NL

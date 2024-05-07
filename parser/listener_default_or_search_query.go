@@ -2,7 +2,6 @@ package parser
 
 import (
 	"local/sample-parser/parsing"
-	"strings"
 
 	"github.com/elastic/go-elasticsearch/v8/typedapi/types"
 	"github.com/elastic/go-elasticsearch/v8/typedapi/types/enums/textquerytype"
@@ -46,10 +45,22 @@ func (l *DefaultOrListener) ExitAndExpression(ctx *parsing.AndExpressionContext)
 
 func (l *DefaultOrListener) ExitOrExpression(ctx *parsing.OrExpressionContext) {
 	orExp := ctx.OrExpression()
+	phrase := ctx.PHRASE()
+	keyword := ctx.AllKEYWORD_CHARACTER()
+
 	if orExp != nil{
 		lq := l.PopQuery()
 		rq := l.PopQuery()
 		l.PushQuery(buildOrQuery(lq, rq))
+	} 
+	if phrase != nil && len(keyword) > 0 {
+		phraseStr := phrase.GetText()
+		phraseStr = phraseStr[1:len(phraseStr)-1]
+		keyWordStr := ""
+		for _, k := range keyword {
+			keyWordStr += k.GetText()
+		}
+		l.PushQuery(buildOrQuery(builderMultiMatchQuery(phraseStr), builderMultiMatchQuery(keyWordStr)))
 	}
 }
 
@@ -61,25 +72,33 @@ func (l *DefaultOrListener) ExitNotExpression(ctx *parsing.NotExpressionContext)
 	}
 }
 
-func (l *DefaultOrListener) ExitPhrase(ctx *parsing.PhraseContext) {
-	quotes := ctx.AllDOUBLE_QUOTE()
-	if len(quotes) == 2 {
-		phrase := strings.TrimLeft(ctx.GetText(), "\"")
-		phrase = strings.TrimRight(phrase, "\"")
-		l.PushQuery(builderMultiMatchQuery(phrase))
+func (l *DefaultOrListener) ExitPhrase(ctx *parsing.PhraseContext){
+	phrase := ctx.PHRASE()
 	
+	if phrase != nil  {
+		phrase := phrase.GetText()
+		phrase = phrase[1:len(phrase)-1]
+		l.PushQuery(builderMultiMatchQuery(phrase))
 	}
+	
 }
 
+
 func (l *DefaultOrListener) ExitKeyword(ctx *parsing.KeywordContext) {
-	kws := ctx.AllKEYWORD_CHARACTER()
-	if kws != nil {
-		str := ""
-		for _, kw := range kws {
-			str += kw.GetText()
-		}
-		l.PushQuery(builderMultiMatchQuery(str))
-	}
+	//keywords := ctx.AllKEYWORD_CHARACTER()
+	//
+	//kStr := ""
+	//for _, k := range keywords {
+	//	kStr += k.GetText()
+	//}
+//
+	//if len(keywords) >= 2  && strings.HasPrefix(kStr, `"`) && strings.HasSuffix(kStr, `"`) {
+	//	kStr = strings.TrimLeft(kStr, `"`)	
+	//	kStr = strings.TrimRight(kStr, `"`)
+	//}
+
+	
+	l.PushQuery(builderMultiMatchQuery(ctx.GetText()))
 }
 
 

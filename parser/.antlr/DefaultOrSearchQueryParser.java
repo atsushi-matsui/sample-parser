@@ -17,7 +17,7 @@ public class DefaultOrSearchQueryParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		AND=1, OR=2, NOT=3, WHITE_SPACE=4, KEYWORD_CHARACTER=5, DOUBLE_QUOTE=6, 
-		NL=7;
+		PHRASE=7, NL=8;
 	public static final int
 		RULE_andExpression = 0, RULE_orExpression = 1, RULE_notExpression = 2, 
 		RULE_phrase = 3, RULE_keyword = 4;
@@ -37,7 +37,7 @@ public class DefaultOrSearchQueryParser extends Parser {
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, "AND", "OR", "NOT", "WHITE_SPACE", "KEYWORD_CHARACTER", "DOUBLE_QUOTE", 
-			"NL"
+			"PHRASE", "NL"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -201,6 +201,11 @@ public class DefaultOrSearchQueryParser extends Parser {
 		public NotExpressionContext notExpression() {
 			return getRuleContext(NotExpressionContext.class,0);
 		}
+		public TerminalNode PHRASE() { return getToken(DefaultOrSearchQueryParser.PHRASE, 0); }
+		public List<TerminalNode> KEYWORD_CHARACTER() { return getTokens(DefaultOrSearchQueryParser.KEYWORD_CHARACTER); }
+		public TerminalNode KEYWORD_CHARACTER(int i) {
+			return getToken(DefaultOrSearchQueryParser.KEYWORD_CHARACTER, i);
+		}
 		public OrExpressionContext orExpression() {
 			return getRuleContext(OrExpressionContext.class,0);
 		}
@@ -231,14 +236,66 @@ public class DefaultOrSearchQueryParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			{
-			setState(32);
-			notExpression();
+			setState(45);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
+			case 1:
+				{
+				setState(32);
+				notExpression();
+				}
+				break;
+			case 2:
+				{
+				setState(34); 
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+				do {
+					{
+					{
+					setState(33);
+					match(KEYWORD_CHARACTER);
+					}
+					}
+					setState(36); 
+					_errHandler.sync(this);
+					_la = _input.LA(1);
+				} while ( _la==KEYWORD_CHARACTER );
+				setState(38);
+				match(PHRASE);
+				}
+				break;
+			case 3:
+				{
+				setState(39);
+				match(PHRASE);
+				setState(41); 
+				_errHandler.sync(this);
+				_alt = 1;
+				do {
+					switch (_alt) {
+					case 1:
+						{
+						{
+						setState(40);
+						match(KEYWORD_CHARACTER);
+						}
+						}
+						break;
+					default:
+						throw new NoViableAltException(this);
+					}
+					setState(43); 
+					_errHandler.sync(this);
+					_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
+				} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
+				}
+				break;
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(43);
+			setState(56);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
@@ -247,30 +304,30 @@ public class DefaultOrSearchQueryParser extends Parser {
 					{
 					_localctx = new OrExpressionContext(_parentctx, _parentState);
 					pushNewRecursionContext(_localctx, _startState, RULE_orExpression);
-					setState(34);
-					if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-					setState(35);
+					setState(47);
+					if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
+					setState(48);
 					match(WHITE_SPACE);
-					setState(38);
+					setState(51);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 					if (_la==OR) {
 						{
-						setState(36);
+						setState(49);
 						match(OR);
-						setState(37);
+						setState(50);
 						match(WHITE_SPACE);
 						}
 					}
 
-					setState(40);
+					setState(53);
 					notExpression();
 					}
 					} 
 				}
-				setState(45);
+				setState(58);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
 			}
 			}
 		}
@@ -306,37 +363,38 @@ public class DefaultOrSearchQueryParser extends Parser {
 		enterRule(_localctx, 4, RULE_notExpression);
 		int _la;
 		try {
-			setState(54);
+			setState(67);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case KEYWORD_CHARACTER:
 			case DOUBLE_QUOTE:
+			case PHRASE:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(46);
+				setState(59);
 				phrase();
 				}
 				break;
 			case NOT:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(47);
+				setState(60);
 				match(NOT);
-				setState(49); 
+				setState(62); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
 					{
 					{
-					setState(48);
+					setState(61);
 					match(WHITE_SPACE);
 					}
 					}
-					setState(51); 
+					setState(64); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==WHITE_SPACE );
-				setState(53);
+				setState(66);
 				phrase();
 				}
 				break;
@@ -360,10 +418,7 @@ public class DefaultOrSearchQueryParser extends Parser {
 		public KeywordContext keyword() {
 			return getRuleContext(KeywordContext.class,0);
 		}
-		public List<TerminalNode> DOUBLE_QUOTE() { return getTokens(DefaultOrSearchQueryParser.DOUBLE_QUOTE); }
-		public TerminalNode DOUBLE_QUOTE(int i) {
-			return getToken(DefaultOrSearchQueryParser.DOUBLE_QUOTE, i);
-		}
+		public TerminalNode PHRASE() { return getToken(DefaultOrSearchQueryParser.PHRASE, 0); }
 		public PhraseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -374,40 +429,22 @@ public class DefaultOrSearchQueryParser extends Parser {
 		PhraseContext _localctx = new PhraseContext(_ctx, getState());
 		enterRule(_localctx, 6, RULE_phrase);
 		try {
-			int _alt;
-			setState(65);
+			setState(71);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case KEYWORD_CHARACTER:
+			case DOUBLE_QUOTE:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(56);
+				setState(69);
 				keyword();
 				}
 				break;
-			case DOUBLE_QUOTE:
+			case PHRASE:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(57);
-				match(DOUBLE_QUOTE);
-				setState(61);
-				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
-				while ( _alt!=1 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
-					if ( _alt==1+1 ) {
-						{
-						{
-						setState(58);
-						matchWildcard();
-						}
-						} 
-					}
-					setState(63);
-					_errHandler.sync(this);
-					_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
-				}
-				setState(64);
-				match(DOUBLE_QUOTE);
+				setState(70);
+				match(PHRASE);
 				}
 				break;
 			default:
@@ -431,6 +468,10 @@ public class DefaultOrSearchQueryParser extends Parser {
 		public TerminalNode KEYWORD_CHARACTER(int i) {
 			return getToken(DefaultOrSearchQueryParser.KEYWORD_CHARACTER, i);
 		}
+		public List<TerminalNode> DOUBLE_QUOTE() { return getTokens(DefaultOrSearchQueryParser.DOUBLE_QUOTE); }
+		public TerminalNode DOUBLE_QUOTE(int i) {
+			return getToken(DefaultOrSearchQueryParser.DOUBLE_QUOTE, i);
+		}
 		public KeywordContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -442,28 +483,61 @@ public class DefaultOrSearchQueryParser extends Parser {
 		enterRule(_localctx, 8, RULE_keyword);
 		try {
 			int _alt;
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(68); 
+			setState(83);
 			_errHandler.sync(this);
-			_alt = 1;
-			do {
-				switch (_alt) {
-				case 1:
-					{
-					{
-					setState(67);
-					match(KEYWORD_CHARACTER);
-					}
-					}
-					break;
-				default:
-					throw new NoViableAltException(this);
-				}
-				setState(70); 
+			switch (_input.LA(1)) {
+			case KEYWORD_CHARACTER:
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(74); 
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,9,_ctx);
-			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
+				_alt = 1;
+				do {
+					switch (_alt) {
+					case 1:
+						{
+						{
+						setState(73);
+						match(KEYWORD_CHARACTER);
+						}
+						}
+						break;
+					default:
+						throw new NoViableAltException(this);
+					}
+					setState(76); 
+					_errHandler.sync(this);
+					_alt = getInterpreter().adaptivePredict(_input,11,_ctx);
+				} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
+				}
+				break;
+			case DOUBLE_QUOTE:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(79); 
+				_errHandler.sync(this);
+				_alt = 1;
+				do {
+					switch (_alt) {
+					case 1:
+						{
+						{
+						setState(78);
+						match(DOUBLE_QUOTE);
+						}
+						}
+						break;
+					default:
+						throw new NoViableAltException(this);
+					}
+					setState(81); 
+					_errHandler.sync(this);
+					_alt = getInterpreter().adaptivePredict(_input,12,_ctx);
+				} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 		}
 		catch (RecognitionException re) {
@@ -496,27 +570,29 @@ public class DefaultOrSearchQueryParser extends Parser {
 	private boolean orExpression_sempred(OrExpressionContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 1:
-			return precpred(_ctx, 1);
+			return precpred(_ctx, 3);
 		}
 		return true;
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\u0007I\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\bV\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0001"+
 		"\u0000\u0001\u0000\u0001\u0000\u0001\u0000\u0001\u0000\u0004\u0000\u0010"+
 		"\b\u0000\u000b\u0000\f\u0000\u0011\u0001\u0000\u0001\u0000\u0004\u0000"+
 		"\u0016\b\u0000\u000b\u0000\f\u0000\u0017\u0001\u0000\u0005\u0000\u001b"+
 		"\b\u0000\n\u0000\f\u0000\u001e\t\u0000\u0001\u0001\u0001\u0001\u0001\u0001"+
-		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0003\u0001\'\b\u0001"+
-		"\u0001\u0001\u0005\u0001*\b\u0001\n\u0001\f\u0001-\t\u0001\u0001\u0002"+
-		"\u0001\u0002\u0001\u0002\u0004\u00022\b\u0002\u000b\u0002\f\u00023\u0001"+
-		"\u0002\u0003\u00027\b\u0002\u0001\u0003\u0001\u0003\u0001\u0003\u0005"+
-		"\u0003<\b\u0003\n\u0003\f\u0003?\t\u0003\u0001\u0003\u0003\u0003B\b\u0003"+
-		"\u0001\u0004\u0004\u0004E\b\u0004\u000b\u0004\f\u0004F\u0001\u0004\u0001"+
-		"=\u0002\u0000\u0002\u0005\u0000\u0002\u0004\u0006\b\u0000\u0000M\u0000"+
-		"\n\u0001\u0000\u0000\u0000\u0002\u001f\u0001\u0000\u0000\u0000\u00046"+
-		"\u0001\u0000\u0000\u0000\u0006A\u0001\u0000\u0000\u0000\bD\u0001\u0000"+
+		"\u0004\u0001#\b\u0001\u000b\u0001\f\u0001$\u0001\u0001\u0001\u0001\u0001"+
+		"\u0001\u0004\u0001*\b\u0001\u000b\u0001\f\u0001+\u0003\u0001.\b\u0001"+
+		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0003\u00014\b\u0001"+
+		"\u0001\u0001\u0005\u00017\b\u0001\n\u0001\f\u0001:\t\u0001\u0001\u0002"+
+		"\u0001\u0002\u0001\u0002\u0004\u0002?\b\u0002\u000b\u0002\f\u0002@\u0001"+
+		"\u0002\u0003\u0002D\b\u0002\u0001\u0003\u0001\u0003\u0003\u0003H\b\u0003"+
+		"\u0001\u0004\u0004\u0004K\b\u0004\u000b\u0004\f\u0004L\u0001\u0004\u0004"+
+		"\u0004P\b\u0004\u000b\u0004\f\u0004Q\u0003\u0004T\b\u0004\u0001\u0004"+
+		"\u0000\u0002\u0000\u0002\u0005\u0000\u0002\u0004\u0006\b\u0000\u0000_"+
+		"\u0000\n\u0001\u0000\u0000\u0000\u0002-\u0001\u0000\u0000\u0000\u0004"+
+		"C\u0001\u0000\u0000\u0000\u0006G\u0001\u0000\u0000\u0000\bS\u0001\u0000"+
 		"\u0000\u0000\n\u000b\u0006\u0000\uffff\uffff\u0000\u000b\f\u0003\u0002"+
 		"\u0001\u0000\f\u001c\u0001\u0000\u0000\u0000\r\u000f\n\u0001\u0000\u0000"+
 		"\u000e\u0010\u0005\u0004\u0000\u0000\u000f\u000e\u0001\u0000\u0000\u0000"+
@@ -529,25 +605,31 @@ public class DefaultOrSearchQueryParser extends Parser {
 		"\u001a\r\u0001\u0000\u0000\u0000\u001b\u001e\u0001\u0000\u0000\u0000\u001c"+
 		"\u001a\u0001\u0000\u0000\u0000\u001c\u001d\u0001\u0000\u0000\u0000\u001d"+
 		"\u0001\u0001\u0000\u0000\u0000\u001e\u001c\u0001\u0000\u0000\u0000\u001f"+
-		" \u0006\u0001\uffff\uffff\u0000 !\u0003\u0004\u0002\u0000!+\u0001\u0000"+
-		"\u0000\u0000\"#\n\u0001\u0000\u0000#&\u0005\u0004\u0000\u0000$%\u0005"+
-		"\u0002\u0000\u0000%\'\u0005\u0004\u0000\u0000&$\u0001\u0000\u0000\u0000"+
-		"&\'\u0001\u0000\u0000\u0000\'(\u0001\u0000\u0000\u0000(*\u0003\u0004\u0002"+
-		"\u0000)\"\u0001\u0000\u0000\u0000*-\u0001\u0000\u0000\u0000+)\u0001\u0000"+
-		"\u0000\u0000+,\u0001\u0000\u0000\u0000,\u0003\u0001\u0000\u0000\u0000"+
-		"-+\u0001\u0000\u0000\u0000.7\u0003\u0006\u0003\u0000/1\u0005\u0003\u0000"+
-		"\u000002\u0005\u0004\u0000\u000010\u0001\u0000\u0000\u000023\u0001\u0000"+
-		"\u0000\u000031\u0001\u0000\u0000\u000034\u0001\u0000\u0000\u000045\u0001"+
-		"\u0000\u0000\u000057\u0003\u0006\u0003\u00006.\u0001\u0000\u0000\u0000"+
-		"6/\u0001\u0000\u0000\u00007\u0005\u0001\u0000\u0000\u00008B\u0003\b\u0004"+
-		"\u00009=\u0005\u0006\u0000\u0000:<\t\u0000\u0000\u0000;:\u0001\u0000\u0000"+
-		"\u0000<?\u0001\u0000\u0000\u0000=>\u0001\u0000\u0000\u0000=;\u0001\u0000"+
-		"\u0000\u0000>@\u0001\u0000\u0000\u0000?=\u0001\u0000\u0000\u0000@B\u0005"+
-		"\u0006\u0000\u0000A8\u0001\u0000\u0000\u0000A9\u0001\u0000\u0000\u0000"+
-		"B\u0007\u0001\u0000\u0000\u0000CE\u0005\u0005\u0000\u0000DC\u0001\u0000"+
-		"\u0000\u0000EF\u0001\u0000\u0000\u0000FD\u0001\u0000\u0000\u0000FG\u0001"+
-		"\u0000\u0000\u0000G\t\u0001\u0000\u0000\u0000\n\u0011\u0017\u001c&+36"+
-		"=AF";
+		" \u0006\u0001\uffff\uffff\u0000 .\u0003\u0004\u0002\u0000!#\u0005\u0005"+
+		"\u0000\u0000\"!\u0001\u0000\u0000\u0000#$\u0001\u0000\u0000\u0000$\"\u0001"+
+		"\u0000\u0000\u0000$%\u0001\u0000\u0000\u0000%&\u0001\u0000\u0000\u0000"+
+		"&.\u0005\u0007\u0000\u0000\')\u0005\u0007\u0000\u0000(*\u0005\u0005\u0000"+
+		"\u0000)(\u0001\u0000\u0000\u0000*+\u0001\u0000\u0000\u0000+)\u0001\u0000"+
+		"\u0000\u0000+,\u0001\u0000\u0000\u0000,.\u0001\u0000\u0000\u0000-\u001f"+
+		"\u0001\u0000\u0000\u0000-\"\u0001\u0000\u0000\u0000-\'\u0001\u0000\u0000"+
+		"\u0000.8\u0001\u0000\u0000\u0000/0\n\u0003\u0000\u000003\u0005\u0004\u0000"+
+		"\u000012\u0005\u0002\u0000\u000024\u0005\u0004\u0000\u000031\u0001\u0000"+
+		"\u0000\u000034\u0001\u0000\u0000\u000045\u0001\u0000\u0000\u000057\u0003"+
+		"\u0004\u0002\u00006/\u0001\u0000\u0000\u00007:\u0001\u0000\u0000\u0000"+
+		"86\u0001\u0000\u0000\u000089\u0001\u0000\u0000\u00009\u0003\u0001\u0000"+
+		"\u0000\u0000:8\u0001\u0000\u0000\u0000;D\u0003\u0006\u0003\u0000<>\u0005"+
+		"\u0003\u0000\u0000=?\u0005\u0004\u0000\u0000>=\u0001\u0000\u0000\u0000"+
+		"?@\u0001\u0000\u0000\u0000@>\u0001\u0000\u0000\u0000@A\u0001\u0000\u0000"+
+		"\u0000AB\u0001\u0000\u0000\u0000BD\u0003\u0006\u0003\u0000C;\u0001\u0000"+
+		"\u0000\u0000C<\u0001\u0000\u0000\u0000D\u0005\u0001\u0000\u0000\u0000"+
+		"EH\u0003\b\u0004\u0000FH\u0005\u0007\u0000\u0000GE\u0001\u0000\u0000\u0000"+
+		"GF\u0001\u0000\u0000\u0000H\u0007\u0001\u0000\u0000\u0000IK\u0005\u0005"+
+		"\u0000\u0000JI\u0001\u0000\u0000\u0000KL\u0001\u0000\u0000\u0000LJ\u0001"+
+		"\u0000\u0000\u0000LM\u0001\u0000\u0000\u0000MT\u0001\u0000\u0000\u0000"+
+		"NP\u0005\u0006\u0000\u0000ON\u0001\u0000\u0000\u0000PQ\u0001\u0000\u0000"+
+		"\u0000QO\u0001\u0000\u0000\u0000QR\u0001\u0000\u0000\u0000RT\u0001\u0000"+
+		"\u0000\u0000SJ\u0001\u0000\u0000\u0000SO\u0001\u0000\u0000\u0000T\t\u0001"+
+		"\u0000\u0000\u0000\u000e\u0011\u0017\u001c$+-38@CGLQS";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
