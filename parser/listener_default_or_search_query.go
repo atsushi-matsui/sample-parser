@@ -33,7 +33,6 @@ func NewDefaultOrListener() *DefaultOrListener {
 	return new(DefaultOrListener)
 }
 
-
 func (l *DefaultOrListener) ExitAndExpression(ctx *parsing.AndExpressionContext) {
 	andExp := ctx.AndExpression()
 	if andExp != nil {
@@ -48,14 +47,14 @@ func (l *DefaultOrListener) ExitOrExpression(ctx *parsing.OrExpressionContext) {
 	phrase := ctx.PHRASE()
 	keyword := ctx.AllKEYWORD_CHARACTER()
 
-	if orExp != nil{
+	if orExp != nil {
 		lq := l.PopQuery()
 		rq := l.PopQuery()
 		l.PushQuery(buildOrQuery(lq, rq))
-	} 
+	}
 	if phrase != nil && len(keyword) > 0 {
 		phraseStr := phrase.GetText()
-		phraseStr = phraseStr[1:len(phraseStr)-1]
+		phraseStr = phraseStr[1 : len(phraseStr)-1]
 		keyWordStr := ""
 		for _, k := range keyword {
 			keyWordStr += k.GetText()
@@ -72,35 +71,20 @@ func (l *DefaultOrListener) ExitNotExpression(ctx *parsing.NotExpressionContext)
 	}
 }
 
-func (l *DefaultOrListener) ExitPhrase(ctx *parsing.PhraseContext){
+func (l *DefaultOrListener) ExitPhrase(ctx *parsing.PhraseContext) {
 	phrase := ctx.PHRASE()
-	
-	if phrase != nil  {
+
+	if phrase != nil {
 		phrase := phrase.GetText()
-		phrase = phrase[1:len(phrase)-1]
+		phrase = phrase[1 : len(phrase)-1]
 		l.PushQuery(builderMultiMatchQuery(phrase))
 	}
-	
-}
 
+}
 
 func (l *DefaultOrListener) ExitKeyword(ctx *parsing.KeywordContext) {
-	//keywords := ctx.AllKEYWORD_CHARACTER()
-	//
-	//kStr := ""
-	//for _, k := range keywords {
-	//	kStr += k.GetText()
-	//}
-//
-	//if len(keywords) >= 2  && strings.HasPrefix(kStr, `"`) && strings.HasSuffix(kStr, `"`) {
-	//	kStr = strings.TrimLeft(kStr, `"`)	
-	//	kStr = strings.TrimRight(kStr, `"`)
-	//}
-
-	
 	l.PushQuery(builderMultiMatchQuery(ctx.GetText()))
 }
-
 
 func builderMultiMatchQuery(str string) *types.Query {
 	return &types.Query{
